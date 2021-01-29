@@ -27,7 +27,7 @@ function init(name) {
 
     myWebSocket = new WebSocket('ws://' + hostname + ':' + port);
     myWebSocket.onopen = () => {
-        console.log('Connected to game');
+        console.log('Trying to connect to game...');
         var message = {
             type: 'SET_PLAYER_NAME',
             player_name: name,
@@ -35,7 +35,7 @@ function init(name) {
         sendMessage(JSON.stringify(message));
     };
 
-    myWebSocket.onmessage = ({ data }) => console.log('Message: ' + data);
+    myWebSocket.onmessage = ({ data }) => console.log(data);
     myWebSocket.onclose = function () {
         console.log('Connection closed');
 
@@ -49,6 +49,7 @@ function sendMessage(message) {
         return;
     } else {
         myWebSocket.send(message);
+        console.log('Sending message: ' + message);
     }
 }
 
