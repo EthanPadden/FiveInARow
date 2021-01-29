@@ -2,6 +2,8 @@ const { send } = require('process');
 const readline = require('readline');
 const WebSocket = require('ws');
 const hostname = 'localhost';
+const prompt = require('prompt-sync')();
+
 const port = 3000;
 
 // Variable to store web socket
@@ -14,10 +16,12 @@ const cliInterface = readline.createInterface({
 });
 
 // When starting the client, prompt the player for a name
-cliInterface.question('Enter name:', function (name) {
-    cliInterface.close();
-    connectToServer(name);
-});
+// cliInterface.question('Enter name:', function (name) {
+//     cliInterface.close();
+//     connectToServer(name);
+// });
+const name = prompt('What is your name?');
+connectToServer(name);
 
 function connectToServer(name) {
     // Connect to the server
@@ -43,16 +47,13 @@ function connectToServer(name) {
 
     // Log messages from the server to the console
     // myWebSocket.onmessage = ({ data }) => console.log(data);
-    myWebSocket.onmessage = function(message) {
-
-        if(message.data === 'YOUR_TURN') {
+    myWebSocket.onmessage = function (message) {
+        if (message.data === 'YOUR_TURN') {
             promptForMove();
         } else {
             console.log(message.data);
-
         }
-    }
-
+    };
 
     // Inform the player when the connection drops
     myWebSocket.onclose = function () {
@@ -73,7 +74,9 @@ function sendMessage(message) {
 }
 
 function promptForMove() {
-    console.log('Enter your move:');
+    var position = prompt('Your move:');
+
+    makeTurn(position);
 }
 
 function makeTurn(column) {

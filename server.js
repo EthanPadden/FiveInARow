@@ -52,13 +52,15 @@ function processMessage(message, client) {
         }
     } else if (messageJSON.type === 'MAKE_TURN') {
         // Check if it is that player's turn
-        if (client === game.turn) {
+        if (client === game.turn.client) {
             console.log(
                 game.turn.name + ' has added disc at ' + messageJSON.position
             );
             game.nextTurn();
+            askPlayersForMove();
         } else {
             client.send('It is not your turn');
+            askPlayersForMove();
         }
     }
 }
