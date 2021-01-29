@@ -42,7 +42,17 @@ function connectToServer(name) {
     };
 
     // Log messages from the server to the console
-    myWebSocket.onmessage = ({ data }) => console.log(data);
+    // myWebSocket.onmessage = ({ data }) => console.log(data);
+    myWebSocket.onmessage = function(message) {
+
+        if(message.data === 'YOUR_TURN') {
+            promptForMove();
+        } else {
+            console.log(message.data);
+
+        }
+    }
+
 
     // Inform the player when the connection drops
     myWebSocket.onclose = function () {
@@ -60,4 +70,20 @@ function sendMessage(message) {
         myWebSocket.send(message);
         console.log('Sending message: ' + message);
     }
+}
+
+function promptForMove() {
+    console.log('Enter your move:');
+}
+
+function makeTurn(column) {
+    console.log('Making move at position: ' + column);
+
+    var message = {
+        type: 'MAKE_TURN',
+        position: column,
+    };
+
+    // Send the player name to the server
+    sendMessage(JSON.stringify(message));
 }

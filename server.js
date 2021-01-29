@@ -24,7 +24,7 @@ server.listen(port, function () {
 });
 
 // Process messages from clients
-function processMessage(message, webSocket) {
+function processMessage(message, client) {
     // Types of messages from the clients are specified by the 'type' property
     var messageJSON = JSON.parse(message);
     console.log(messageJSON);
@@ -34,20 +34,31 @@ function processMessage(message, webSocket) {
 
         // playerAdded is true if the game is not full (ie the player was added successfully)
         var playerAdded = game.addPlayer(
-            new Player(webSocket, messageJSON.player_name)
+            new Player(client, messageJSON.player_name)
         );
 
         if (playerAdded) {
             sendMessageToAllClients('Player added: ' + messageJSON.player_name);
 
             // If the game has started (ie 2 players are added)
-            if(game.active) {
+            if (game.active) {
                 console.log(game.board);
                 sendMessageToAllClients('Game has started...');
+                askPlayersForMove();
             }
         } else {
-            webSocket.send('Game is full');
-            webSocket.close();
+            client.send('Game is full');
+            client.close();
+        }
+    } else if (messageJSON.type === 'MAKE_TURN') {
+        // Check if it is that player's turn
+        if (client === game.turn) {
+            console.log(
+                game.turn.name + ' has added disc at ' + messageJSON.position
+            );
+            game.nextTurn();
+        } else {
+            client.send('It is not your turn');
         }
     }
 }
@@ -55,4 +66,9 @@ function processMessage(message, webSocket) {
 function sendMessageToAllClients(message) {
     if (typeof game.player1 !== 'undefined') game.player1.client.send(message);
     if (typeof game.player2 !== 'undefined') game.player2.client.send(message);
+}
+
+function askPlayersForMove() {
+    sendMessageToAllClients('It is ' + game.turn.name + '\'s move');
+    game.turn.client.send('YOUR_TURN');
 }
