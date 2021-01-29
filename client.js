@@ -3,7 +3,6 @@ const readline = require('readline');
 const WebSocket = require('ws');
 const hostname = 'localhost';
 const port = 3000;
-var playerName = null;
 
 let myWebSocket;
 const cliInterface = readline.createInterface({
