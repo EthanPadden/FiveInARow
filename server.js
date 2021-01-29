@@ -39,6 +39,12 @@ function processMessage(message, webSocket) {
 
         if (playerAdded) {
             sendMessageToAllClients('Player added: ' + messageJSON.player_name);
+
+            // If the game has started (ie 2 players are added)
+            if(game.active) {
+                console.log(game.board);
+                sendMessageToAllClients('Game has started...');
+            }
         } else {
             webSocket.send('Game is full');
             webSocket.close();
