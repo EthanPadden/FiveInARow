@@ -73,11 +73,18 @@ class Game {
         if (this.isValidMove(column)) {
             var row = this.board.nextEmptySquareInColumn(column);
             this.board.addGamePiece(row, column, playerNumber);
-            return true;
+            var hasWon = this.board.checkForWinner(row, column, playerNumber);
+            if(hasWon) {
+                return 1;
+            } else {
+                return 0;
+            }
         } else {
-            return false;
+            return -1;
         }
     }
+
+
 }
 
 module.exports = Game;

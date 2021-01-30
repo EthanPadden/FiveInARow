@@ -57,10 +57,14 @@ function processMessage(message, client) {
                 game.turn.name + ' has added disc at ' + messageJSON.position
             );
 
-            var success = game.makeMove(messageJSON.position, game.turn.number);
+            var result = game.makeMove(messageJSON.position, game.turn.number);
 
-            if(success){
+            if(result == 1){
+                /// Game won
+                
+            } else if(result == 0) {
                 console.log(game.board.toString());
+
                 game.nextTurn();
                 askPlayersForMove();
             } else {

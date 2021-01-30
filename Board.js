@@ -62,15 +62,58 @@ class Board {
     // Columns start from the left at 1
     // playerNumber is either 1 or 2
     addGamePiece(row, column, playerNumber) {
-        console.log('PLYAER: ' + playerNumber);
+        // console.log('PLYAER: ' + playerNumber);
         var rowArr = this.board[row - 1];
-        console.log(row);
-        console.log(rowArr);
+        // console.log(row);
+        // console.log(rowArr);
         rowArr[column - 1] = gamePieces[playerNumber - 1];
-        console.log(rowArr);
+
+        // console.log(rowArr);
 
         this.board[row - 1] = rowArr;
-        console.log(this.board);
+        // console.log(this.board);
+    }
+
+    checkForWinner(row, column, playerNumber) {
+        return this.checkForWinnerHorizontally(row, playerNumber);
+    }
+
+    checkForWinnerHorizontally(row, playerNumber) {
+        var rowArr = this.board[row - 1];
+        var hasWon = false;
+
+        // FIND THE FIRST PLAYER PIECE IN THE ROW:
+        // Start at the beginning of the row
+        var targetPiece = gamePieces[playerNumber-1];
+        var i = 0;
+        while(i < 5){ 
+            if(rowArr[i] == targetPiece) {
+                break;
+            }
+            i++;
+        }
+
+        // If the player's piece was not found in the first 5 columns,
+        // they have not won in that row
+        if(i == 5) return hasWon;
+
+        var inARow = 1;
+        i++;
+        
+        while(i < rowArr.length) {
+            if(rowArr[i] == targetPiece) {
+                inARow++;
+            
+            } else {
+                // Reset and continue for next column
+                inARow = 0;
+            }
+            i++;
+            if (inARow == 5) hasWon = true;
+
+        }
+
+        return hasWon;
     }
 }
 
