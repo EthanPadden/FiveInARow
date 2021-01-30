@@ -42,7 +42,6 @@ function processMessage(message, client) {
 
             // If the game has started (ie 2 players are added)
             if (game.active) {
-                console.log(game.board);
                 sendMessageToAllClients('Game has started...');
                 askPlayersForMove();
             }
@@ -56,6 +55,7 @@ function processMessage(message, client) {
             console.log(
                 game.turn.name + ' has added disc at ' + messageJSON.position
             );
+            console.log(game.board.toString());
             game.nextTurn();
             askPlayersForMove();
         } else {

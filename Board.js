@@ -15,6 +15,22 @@ class Board {
             this.board.push(emptyRow);
         }
     }
+
+    toString() {
+        var boardStr = '';
+
+        // The board is an array of rows
+        for(var i = 0; i < this.board.length; i++) {
+            var rowStr = '';
+            var rowArr = this.board[i];
+            for(var j = 0; j < rowArr.length; j++) {
+                rowStr += rowArr[i];
+            }
+            boardStr += rowStr + '\n';
+        }
+
+        return boardStr;
+    }
 }
 
 module.exports = Board;
