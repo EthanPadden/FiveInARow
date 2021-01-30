@@ -55,9 +55,14 @@ function processMessage(message, client) {
             console.log(
                 game.turn.name + ' has added disc at ' + messageJSON.position
             );
-            console.log(game.board.toString());
-            game.nextTurn();
-            askPlayersForMove();
+            if(game.isValidMove(messageJSON.position)){
+                console.log(game.board.toString());
+                game.nextTurn();
+                askPlayersForMove();
+            } else {
+                client.send('INVALID_MOVE');
+            }
+            
         } else {
             client.send('It is not your turn');
             askPlayersForMove();

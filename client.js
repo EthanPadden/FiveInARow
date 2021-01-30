@@ -50,6 +50,9 @@ function connectToServer(name) {
     myWebSocket.onmessage = function (message) {
         if (message.data === 'YOUR_TURN') {
             promptForMove();
+        } else if (message.data === 'INVALID_MOVE') {
+            console.log('Invalid move');
+            promptForMove();
         } else {
             console.log(message.data);
         }

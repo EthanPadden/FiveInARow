@@ -31,6 +31,12 @@ class Board {
 
         return boardStr;
     }
+
+    // Not zero indexed
+    sqaureisEmpty(row, column) {
+        var row = this.board[row-1];
+        return row[column-1] === emptySqaure;
+    }
 }
 
 module.exports = Board;
