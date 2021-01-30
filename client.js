@@ -72,7 +72,6 @@ function sendMessage(message) {
         return;
     } else {
         myWebSocket.send(message);
-        console.log('Sending message: ' + message);
     }
 }
 
@@ -83,8 +82,6 @@ function promptForMove() {
 }
 
 function makeTurn(column) {
-    console.log('Making move at position: ' + column);
-
     var message = {
         type: 'MAKE_TURN',
         position: column,

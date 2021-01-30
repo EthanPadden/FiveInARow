@@ -43,7 +43,7 @@ function processMessage(message, client) {
             // If the game has started (ie 2 players are added)
             if (game.active) {
                 sendMessageToAllClients('Game has started...');
-                console.log(game.board.toString());
+                sendMessageToAllClients(game.board.toString());
                 askPlayersForMove();
             }
         } else {
@@ -60,11 +60,11 @@ function processMessage(message, client) {
             var result = game.makeMove(messageJSON.position, game.turn.number);
 
             if(result == 1){
-                /// Game won
-                
+                // Game won
+                sendMessageToAllClients(game.board.toString());
+                sendMessageToAllClients(game.turn.name + " has won!");
             } else if(result == 0) {
-                console.log(game.board.toString());
-
+                sendMessageToAllClients(game.board.toString());
                 game.nextTurn();
                 askPlayersForMove();
             } else {
