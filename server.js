@@ -43,6 +43,7 @@ function processMessage(message, client) {
             // If the game has started (ie 2 players are added)
             if (game.active) {
                 sendMessageToAllClients('Game has started...');
+                console.log(game.board.toString());
                 askPlayersForMove();
             }
         } else {
@@ -55,9 +56,11 @@ function processMessage(message, client) {
             console.log(
                 game.turn.name + ' has added disc at ' + messageJSON.position
             );
-            if(game.isValidMove(messageJSON.position)){
+
+            var success = game.makeMove(messageJSON.position, game.turn.number);
+
+            if(success){
                 console.log(game.board.toString());
-                console.log('Next empty square is ' + game.board.nextEmptySquareInColumn(messageJSON.position));
                 game.nextTurn();
                 askPlayersForMove();
             } else {

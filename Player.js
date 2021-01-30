@@ -3,6 +3,10 @@ class Player {
         this.client = client;
         this.name = name;
     }
+
+    setPlayerNumber(number) {
+        this.number = number;
+    }
 }
 
 module.exports = Player;

@@ -10,10 +10,12 @@ class Game {
     addPlayer(player) {
         if (typeof this.player1 == 'undefined') {
             this.player1 = player;
+            this.player1.setPlayerNumber(1);
             return true;
         } else if (typeof this.player2 == 'undefined') {
             this.player2 = player;
             this.startGame();
+            this.player2.setPlayerNumber(2);
             return true;
         } else {
             return false;
@@ -63,6 +65,18 @@ class Game {
             }
         }
         return true;
+    }
+
+    // Returns true if move was successful
+    // false if the move was invalid
+    makeMove(column, playerNumber) {
+        if (this.isValidMove(column)) {
+            var row = this.board.nextEmptySquareInColumn(column);
+            this.board.addGamePiece(row, column, playerNumber);
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 
