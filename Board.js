@@ -77,7 +77,8 @@ class Board {
     checkForWinner(row, column, playerNumber) {
         var horizontalWin = this.checkForWinnerHorizontally(row, playerNumber);
         var verticalWin = this.checkForWinnerVertically(column, playerNumber);
-        return horizontalWin || verticalWin;
+        var diagonalWinPositiveSlope = this.checkForWinnerDiagonallyPositiveSlope(row, column, playerNumber);
+        return horizontalWin || verticalWin || diagonalWinPositiveSlope;
     }
 
     checkForWinnerHorizontally(row, playerNumber) {
@@ -86,10 +87,10 @@ class Board {
 
         // FIND THE FIRST PLAYER PIECE IN THE ROW:
         // Start at the beginning of the row
-        var targetPiece = gamePieces[playerNumber-1];
+        var targetPiece = gamePieces[playerNumber - 1];
         var i = 0;
-        while(i < 5){ 
-            if(rowArr[i] == targetPiece) {
+        while (i < 5) {
+            if (rowArr[i] == targetPiece) {
                 break;
             }
             i++;
@@ -97,22 +98,20 @@ class Board {
 
         // If the player's piece was not found in the first 5 columns,
         // they have not won in that row
-        if(i == 5) return hasWon;
+        if (i == 5) return hasWon;
 
         var inARow = 1;
         i++;
-        
-        while(i < rowArr.length) {
-            if(rowArr[i] == targetPiece) {
+
+        while (i < rowArr.length) {
+            if (rowArr[i] == targetPiece) {
                 inARow++;
-            
             } else {
                 // Reset and continue for next column
                 inARow = 0;
             }
             i++;
             if (inARow == 5) hasWon = true;
-
         }
 
         return hasWon;
@@ -123,29 +122,94 @@ class Board {
 
         // For the player to win vertically, there are 2 cases
         var i = 1;
-        var rowArr = this.board[i-1];
-        var targetPiece = gamePieces[playerNumber-1];
+        var rowArr = this.board[i - 1];
+        var targetPiece = gamePieces[playerNumber - 1];
 
         // If the target piece is  in row 1, check rows 1 to 5
         // If not, check rows 2 to 6
-        if(rowArr[column] != targetPiece) {
+        if (rowArr[column] != targetPiece) {
             i++;
-        } 
+        }
 
-        while( i < this.board.length) {
-            rowArr = this.board[i-1];
+        while (i < this.board.length) {
+            rowArr = this.board[i - 1];
 
-            if(rowArr[column-1] !== targetPiece) {
-                
+            if (rowArr[column - 1] !== targetPiece) {
                 hasWon = false;
                 break;
-            } 
+            }
             i++;
         }
 
         return hasWon;
     }
 
+    checkForWinnerDiagonallyPositiveSlope(row, column, playerNumber) {
+        var hasWon = false;
+
+        console.log(playerNumber);
+        // Start at the piece's position
+        var currentRow = row+1;
+        var currentColumn = column-1;
+        var targetPiece = gamePieces[playerNumber - 1];
+
+        // This represents the piece that was just added
+        var inARow = 1;
+
+        // Move down and left
+        // as we move down, the row pointer increases
+        // as we move left, the column pointer decreases
+        // These limits are not zero indexed
+
+        while (currentRow <= 6 && currentColumn >= 1) {
+        
+            console.log("Checking: " + currentRow + " " + currentColumn);
+
+            if (this.board[currentRow-1][currentColumn-1] == targetPiece) {
+                inARow++;
+                if (inARow == 5) {
+                    hasWon = true;
+                    break;
+                }
+            } else {
+                // If we break the chain, stop looking in this direction
+                break;
+            }
+
+            // Move down and left 1 square
+            currentRow++;
+            currentColumn--;
+        }
+
+        // Reset the pointers back to the piece that was just added
+        var currentRow = row-1;
+        var currentColumn = column+1;
+
+        // Move up and right
+        // as we move up, the row pointer decreases
+        // as we move right, the column pointer increases
+        // These limits are not zero indexed
+        while (currentRow >= 1 && currentColumn <= 9) {
+            
+
+            if (this.board[currentRow-1][currentColumn-1] == targetPiece) {
+                inARow++;
+                if (inARow == 5) {
+                    hasWon = true;
+                    break;
+                }
+            } else {
+                // If we break the chain, stop looking in this direction
+                break;
+            }
+
+            // Move up and right 1 square
+            currentRow--;
+            currentColumn++;
+        } 
+
+        return hasWon;
+    }
 }
 
 module.exports = Board;
