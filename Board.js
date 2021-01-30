@@ -75,7 +75,9 @@ class Board {
     }
 
     checkForWinner(row, column, playerNumber) {
-        return this.checkForWinnerHorizontally(row, playerNumber);
+        var horizontalWin = this.checkForWinnerHorizontally(row, playerNumber);
+        var verticalWin = this.checkForWinnerVertically(column, playerNumber);
+        return horizontalWin || verticalWin;
     }
 
     checkForWinnerHorizontally(row, playerNumber) {
@@ -115,6 +117,35 @@ class Board {
 
         return hasWon;
     }
+
+    checkForWinnerVertically(column, playerNumber) {
+        var hasWon = true;
+
+        // For the player to win vertically, there are 2 cases
+        var i = 1;
+        var rowArr = this.board[i-1];
+        var targetPiece = gamePieces[playerNumber-1];
+
+        // If the target piece is  in row 1, check rows 1 to 5
+        // If not, check rows 2 to 6
+        if(rowArr[column] != targetPiece) {
+            i++;
+        } 
+
+        while( i < this.board.length) {
+            rowArr = this.board[i-1];
+
+            if(rowArr[column-1] !== targetPiece) {
+                
+                hasWon = false;
+                break;
+            } 
+            i++;
+        }
+
+        return hasWon;
+    }
+
 }
 
 module.exports = Board;
