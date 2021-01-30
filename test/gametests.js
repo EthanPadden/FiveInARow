@@ -181,3 +181,53 @@ describe('Diagonal wins - positive slope', function () {
     
     
 });
+
+
+describe('Diagonal wins - negative slope', function () {
+    describe('Diagonal win from bottom right corner', function () {
+        it('Player 1 should win the game', function () {
+            var game = new Game();
+            var player1 = new Player(null, 'John');
+            var player2 = new Player(null, 'Mary');
+    
+            var result;
+            game.addPlayer(player1);
+            game.addPlayer(player2);
+    
+            result = game.makeMove(9, player1.number);
+            assert.equal(result, 0);
+            result = game.makeMove(8, player2.number);
+            assert.equal(result, 0);
+            result = game.makeMove(8, player1.number);
+            assert.equal(result, 0);
+            result = game.makeMove(7, player2.number);
+            assert.equal(result, 0);
+            result = game.makeMove(7, player1.number);
+            assert.equal(result, 0);
+            result = game.makeMove(6, player2.number);
+            assert.equal(result, 0);
+            result = game.makeMove(7, player1.number);
+            assert.equal(result, 0);
+            result = game.makeMove(6, player2.number);
+            assert.equal(result, 0);
+            result = game.makeMove(6, player1.number);
+            assert.equal(result, 0);
+            result = game.makeMove(5, player2.number);
+            assert.equal(result, 0);
+            result = game.makeMove(6, player1.number);
+            assert.equal(result, 0);
+            result = game.makeMove(5, player2.number);
+            assert.equal(result, 0);
+            result = game.makeMove(5, player1.number);
+            assert.equal(result, 0);
+            result = game.makeMove(5, player2.number);
+            assert.equal(result, 0);
+           
+
+            result = game.makeMove(5, player1.number);
+            assert.equal(result, 1);
+        });
+    });
+    
+    
+});
