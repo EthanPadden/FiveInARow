@@ -37,6 +37,14 @@ class Board {
         var row = this.board[row-1];
         return row[column-1] === emptySqaure;
     }
+
+    // Input is assumed to be valid (an integer in the correct range, not zero indexed)
+    nextEmptySquareInColumn(column) {
+        // Start from the bottom of the board, and return the (non zero-indexed) row number
+        for(var i = this.board.length-1; i > 0; i--) {
+            if(this.sqaureisEmpty(i+1, column)) return i+1;
+        }
+    }
 }
 
 module.exports = Board;

@@ -57,6 +57,7 @@ function processMessage(message, client) {
             );
             if(game.isValidMove(messageJSON.position)){
                 console.log(game.board.toString());
+                console.log('Next empty square is ' + game.board.nextEmptySquareInColumn(messageJSON.position));
                 game.nextTurn();
                 askPlayersForMove();
             } else {
