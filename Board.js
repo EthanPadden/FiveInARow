@@ -203,12 +203,16 @@ class Board {
         // For the player to win vertically, there are 2 cases:
         // If the target piece is in row 1, check rows 1 to 5
         // If not, check rows 2 to 6
-        if (rowArr[column] != targetPiece) {
+        var endPoint = this.board.length;
+        if (rowArr[column-1] == targetPiece) {
+            endPoint--;
+        } else {
             pointer++;
+
         }
 
-        // Iterate to the end of the column
-        while (pointer < this.board.length) {
+        // Iterate to the end point
+        while (pointer <= endPoint) {
             // Get the row array at that point
             rowArr = this.board[pointer - 1];
 
@@ -218,7 +222,7 @@ class Board {
                 // they have not won, so stop iterating and return that they have not
                 hasWon = false;
                 break;
-            }
+            } 
 
             // Otherwise, check the next row
             pointer++;
