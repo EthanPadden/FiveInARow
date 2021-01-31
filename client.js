@@ -6,7 +6,7 @@ const hostname = 'localhost';
 const port = 3000;
 
 // Variable to store web socket
-let myWebSocket;
+let webSocket;
 
 // When starting the client:
 // Prompt the player for a name
@@ -18,16 +18,16 @@ connectToServer(name);
 // Sends it a message to set the player's name
 function connectToServer(name) {
     // Connect to the server
-    if (myWebSocket) {
-        myWebSocket.onerror = myWebSocket.onopen = myWebSocket.onclose = null;
-        myWebSocket.close();
+    if (webSocket) {
+        webSocket.onerror = webSocket.onopen = webSocket.onclose = null;
+        webSocket.close();
     }
 
-    myWebSocket = new WebSocket('ws://' + hostname + ':' + port);
+    webSocket = new WebSocket('ws://' + hostname + ':' + port);
 
     // When the connection is opened:
     // Send the player name to ther server
-    myWebSocket.onopen = () => {
+    webSocket.onopen = () => {
         console.log('Trying to connect to game...');
 
         var message = {
@@ -41,12 +41,15 @@ function connectToServer(name) {
     // When a message is recieved from the server
     // The server sends special messages in the form of signals (e.g. YOUR_TURN)
     // Other data from the server is just printed out to the client console
-    myWebSocket.onmessage = function (message) {
+    webSocket.onmessage = function (message) {
         if (message.data === 'YOUR_TURN') {
             promptForMove();
         } else if (message.data === 'INVALID_MOVE') {
             console.log('Invalid move');
             promptForMove();
+        } else if (message.data === 'DISCONNECT') {
+            console.log('The other player has disconnected');
+            webSocket.close();
         } else {
             // If there is no signal set
             console.log(message.data);
@@ -54,9 +57,9 @@ function connectToServer(name) {
     };
 
     // Inform the player when the connection drops
-    myWebSocket.onclose = function () {
+    webSocket.onclose = function () {
         console.log('You are disconnected from the server');
-        myWebSocket = null;
+        webSocket = null;
     };
 }
 
@@ -64,11 +67,11 @@ function connectToServer(name) {
 // The client sends special messages in the form of signals (e.g. YOUR_TURN)
 // The signal is set to the type attribute
 function sendMessage(message) {
-    if (!myWebSocket) {
+    if (!webSocket) {
         console.log('You are disconnected from the server');
         return;
     } else {
-        myWebSocket.send(message);
+        webSocket.send(message);
     }
 }
 
