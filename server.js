@@ -60,6 +60,8 @@ function processMessage(message, client) {
                 sendMessageToAllClients('Game has started...');
                 sendMessageToAllClients(game.board.toString());
                 askPlayersForMove();
+            } else {
+                client.send('Waiting on 2nd player...');
             }
         } else {
             // Send error message to the client and disconnect them
@@ -87,6 +89,7 @@ function processMessage(message, client) {
                     // This means the move was a winning move
                     sendMessageToAllClients(game.board.toString());
                     sendMessageToAllClients(game.turn.name + ' has won!');
+                    sendMessageToAllClients('DISCONNECT');
                 } else if (result == 0) {
                     // This means the move was not a winning move,
                     // but the move was successful (the input was valid)
