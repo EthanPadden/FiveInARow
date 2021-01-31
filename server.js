@@ -18,6 +18,14 @@ webSocketServer.on('connection', function connection(webSocket) {
     webSocket.on('message', function incoming(data) {
         processMessage(data, webSocket);
     });
+
+    // When a client connection drops
+    webSocket.onclose = function () {
+        console.log('A player has disconnected');
+        myWebSocket = null;
+        sendMessageToAllClients('DISCONNECT');
+        game = new Game();
+    };
 });
 
 // Start the server listening
@@ -59,34 +67,42 @@ function processMessage(message, client) {
             client.close();
         }
     } else if (messageJSON.type === 'MAKE_TURN') {
-        // Check if it is that player's turn
-        if (client === game.turn.client) {
-            console.log(
-                game.turn.name +
-                    ' has added a piece in column ' +
-                    messageJSON.position
-            );
+        // Check if there is an active game
+        if (game.active) {
+            // Check if it is that player's turn
+            if (client === game.turn.client) {
+                console.log(
+                    game.turn.name +
+                        ' has added a piece in column ' +
+                        messageJSON.position
+                );
 
-            // The result can take on values 1, 0 or -1
-            var result = game.makeMove(messageJSON.position, game.turn.number);
+                // The result can take on values 1, 0 or -1
+                var result = game.makeMove(
+                    messageJSON.position,
+                    game.turn.number
+                );
 
-            if (result == 1) {
-                // This means the move was a winning move
-                sendMessageToAllClients(game.board.toString());
-                sendMessageToAllClients(game.turn.name + ' has won!');
-            } else if (result == 0) {
-                // This means the move was not a winning move,
-                // but the move was successful (the input was valid)
-                sendMessageToAllClients(game.board.toString());
-                game.nextTurn();
-                askPlayersForMove();
+                if (result == 1) {
+                    // This means the move was a winning move
+                    sendMessageToAllClients(game.board.toString());
+                    sendMessageToAllClients(game.turn.name + ' has won!');
+                } else if (result == 0) {
+                    // This means the move was not a winning move,
+                    // but the move was successful (the input was valid)
+                    sendMessageToAllClients(game.board.toString());
+                    game.nextTurn();
+                    askPlayersForMove();
+                } else {
+                    // The input was invalid
+                    client.send('INVALID_MOVE');
+                }
             } else {
-                // The input was invalid
-                client.send('INVALID_MOVE');
+                client.send('It is not your turn');
+                askPlayersForMove();
             }
         } else {
-            client.send('It is not your turn');
-            askPlayersForMove();
+            client.send('There is no game active');
         }
     }
 }
