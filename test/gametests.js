@@ -630,7 +630,7 @@ function compareBoardState(boardGrid1, boardGrid2) {
 }
 
 function getCopyOfBoard(board) {
-    var sourceBoard = board.board;
+    var sourceBoard = board.grid;
     var targetBoard = new Array();
 
      // For every row in the board

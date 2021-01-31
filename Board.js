@@ -4,24 +4,16 @@ const gamePieces = ['[X]', '[O]'];
 
 class Board {
     constructor() {
-        this.board = new Array();
+        this.grid = new Array();
 
         // Build up an empty board of 6 empty rows
         for (var i = 0; i < 6; i++) {
             // For 6 rows, push an array of 9 squares
-            this.board.push(
-                new Array(
-                    emptySqaure,
-                    emptySqaure,
-                    emptySqaure,
-                    emptySqaure,
-                    emptySqaure,
-                    emptySqaure,
-                    emptySqaure,
-                    emptySqaure,
-                    emptySqaure
-                )
-            );
+            var rowArr = new Array();
+            for (var j = 1; j <= 9; j++) {
+                rowArr.push(emptySqaure);
+            }
+            this.grid.push(rowArr);
         }
     }
 
@@ -33,10 +25,10 @@ class Board {
         var boardStr = '';
 
         // For every row in the board
-        for (var i = 0; i < this.board.length; i++) {
+        for (var i = 0; i < this.grid.length; i++) {
             // Each row is an array, so a string is build for each
             var rowStr = '';
-            var rowArr = this.board[i];
+            var rowArr = this.grid[i];
 
             // For each sqare in the row, append to the row string
             for (var j = 0; j < rowArr.length; j++) {
@@ -56,7 +48,7 @@ class Board {
      * @param {*} column : The column number (integer in the valid range, not zero-indexed) to check
      */
     sqaureisEmpty(row, column) {
-        var row = this.board[row - 1];
+        var row = this.grid[row - 1];
         return row[column - 1] === emptySqaure;
     }
 
@@ -66,7 +58,7 @@ class Board {
      */
     nextEmptySquareInColumn(column) {
         // Start from the bottom of the board, and return the (non zero-indexed) row number
-        for (var i = this.board.length - 1; i >= 0; i--) {
+        for (var i = this.grid.length - 1; i >= 0; i--) {
             if (this.sqaureisEmpty(i + 1, column)) return i + 1;
         }
     }
@@ -81,13 +73,13 @@ class Board {
      */
     addGamePiece(row, column, playerNumber) {
         // Get the row as an array
-        var rowArr = this.board[row - 1];
+        var rowArr = this.grid[row - 1];
 
         // Set the square at the correct column number to be the player's piece
         rowArr[column - 1] = gamePieces[playerNumber - 1];
 
         // Set this updated row back in the board
-        this.board[row - 1] = rowArr;
+        this.grid[row - 1] = rowArr;
     }
 
     /**
@@ -126,7 +118,7 @@ class Board {
      */
     checkForWinnerHorizontally(row, playerNumber) {
         // Get the row in question
-        var rowArr = this.board[row - 1];
+        var rowArr = this.grid[row - 1];
 
         // Before checking, assume that the player has not won
         // This will be set to true if we find that they have
@@ -195,7 +187,7 @@ class Board {
 
         // Start the pointer at the first row
         var pointer = 1;
-        var rowArr = this.board[pointer - 1];
+        var rowArr = this.grid[pointer - 1];
 
         // This is the piece to check against
         var targetPiece = gamePieces[playerNumber - 1];
@@ -203,18 +195,17 @@ class Board {
         // For the player to win vertically, there are 2 cases:
         // If the target piece is in row 1, check rows 1 to 5
         // If not, check rows 2 to 6
-        var endPoint = this.board.length;
-        if (rowArr[column-1] == targetPiece) {
+        var endPoint = this.grid.length;
+        if (rowArr[column - 1] == targetPiece) {
             endPoint--;
         } else {
             pointer++;
-
         }
 
         // Iterate to the end point
         while (pointer <= endPoint) {
             // Get the row array at that point
-            rowArr = this.board[pointer - 1];
+            rowArr = this.grid[pointer - 1];
 
             // Check in the column for the target piece
             if (rowArr[column - 1] !== targetPiece) {
@@ -222,7 +213,7 @@ class Board {
                 // they have not won, so stop iterating and return that they have not
                 hasWon = false;
                 break;
-            } 
+            }
 
             // Otherwise, check the next row
             pointer++;
@@ -266,7 +257,7 @@ class Board {
         // Iterate to the bottom left of the board
         while (currentRow <= 6 && currentColumn >= 1) {
             // If we find the player's piece here
-            if (this.board[currentRow - 1][currentColumn - 1] == targetPiece) {
+            if (this.grid[currentRow - 1][currentColumn - 1] == targetPiece) {
                 // Increment inARow
                 inARow++;
 
@@ -299,7 +290,7 @@ class Board {
         // Iterate to the top right of the board
         while (currentRow >= 1 && currentColumn <= 9) {
             // If we find the player's piece here
-            if (this.board[currentRow - 1][currentColumn - 1] == targetPiece) {
+            if (this.grid[currentRow - 1][currentColumn - 1] == targetPiece) {
                 // Increment inARow
                 inARow++;
 
@@ -356,7 +347,7 @@ class Board {
         // Iterate to the top left of the board
         while (currentRow >= 1 && currentColumn >= 1) {
             // If we find the player's piece here
-            if (this.board[currentRow - 1][currentColumn - 1] == targetPiece) {
+            if (this.grid[currentRow - 1][currentColumn - 1] == targetPiece) {
                 // Increment inARow
                 inARow++;
 
@@ -389,7 +380,7 @@ class Board {
         // Iterate to the bottom right of the board
         while (currentRow <= 6 && currentColumn <= 9) {
             // If we find the player's piece here
-            if (this.board[currentRow - 1][currentColumn - 1] == targetPiece) {
+            if (this.grid[currentRow - 1][currentColumn - 1] == targetPiece) {
                 // Increment inARow
                 inARow++;
 
